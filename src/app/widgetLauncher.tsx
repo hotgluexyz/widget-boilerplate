@@ -5,12 +5,18 @@ export default function WidgetLauncher({ setTenantIsLinked }: { setTenantIsLinke
     
     const handleOpenWidget = () => {
         openWidget(uuidv4(), {
-          flow: "KvbIoB9YR",
+          flow: process.env.NEXT_PUBLIC_FLOW_ID ?? '',
           listener: {
             onConnectorLinked: () => {
               setTenantIsLinked(true)
             },
+            onSourceLinked: () => {
+              setTenantIsLinked(true)
+            },
             onConnectorUnlinked: () => {
+              setTenantIsLinked(false)
+            },
+            onSourceUnlinked: () => {
               setTenantIsLinked(false)
             }
           }
