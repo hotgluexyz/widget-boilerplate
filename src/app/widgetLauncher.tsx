@@ -1,18 +1,36 @@
 import { useHotglue } from "@hotglue/widget";
-
-export default function WidgetLauncher() {
+import { v4 as uuidv4 } from 'uuid';
+export default function WidgetLauncher({ setTenantIsLinked }: { setTenantIsLinked: (tenantIsLinked: boolean) => void }) {
     const { openWidget } = useHotglue();
     
-    const generateUUID = () => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    };
-  return (
-    <div>
-      <button onClick={() => openWidget(generateUUID())}>Open Widget</button>
+    const handleOpenWidget = () => {
+        openWidget(uuidv4(), {
+          flow: "KvbIoB9YR",
+          listener: {
+            onConnectorLinked: () => {
+              setTenantIsLinked(true)
+            },
+            onConnectorUnlinked: () => {
+              setTenantIsLinked(false)
+            }
+          }
+          });
+      };
+    return (
+      <div>
+        <button
+      className={`
+        bg-green-500 
+        transition-all duration-100
+        shadow-lg
+        cursor-pointer 
+        text-white 
+        px-12 py-2 
+        rounded-3xl
+        hover:bg-green-500 
+        hover:shadow-sm
+        disabled:opacity-50`} 
+      onClick={handleOpenWidget}>Connect Your Account</button>
     </div>
   );
 }
